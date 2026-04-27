@@ -34,10 +34,10 @@ jobs:
 
       - name: Sync articles to Chatwoot
         env:
-          CHATWOOTBASEURL: ${{ secrets.CHATWOOTBASEURL }}
-          CHATWOOTAPITOKEN: ${{ secrets.CHATWOOTAPITOKEN }}
-          CHATWOOTACCOUNTID: ${{ secrets.CHATWOOTACCOUNTID }}
-          CHATWOOTPORTALSLUG: ${{ secrets.CHATWOOTPORTALSLUG }}
+          CHATWOOT_BASE_URL: ${{ secrets.CHATWOOT_BASE_URL }}
+          CHATWOOT_API_TOKEN: ${{ secrets.CHATWOOT_API_TOKEN }}
+          CHATWOOT_ACCOUNT_ID: ${{ secrets.CHATWOOT_ACCOUNT_ID }}
+          CHATWOOT_PORTAL_SLUG: ${{ secrets.CHATWOOT_PORTAL_SLUG }}
         run: |
           python3 -c "
           import sys, os
@@ -46,17 +46,17 @@ jobs:
           from backend.sync_engine import sync
 
           dryrun = '${{ github.event.inputs.dryrun }}' == 'true'
-          docsdir = os.environ.get('DOCSDIR', './docs')
+          docsdir = os.environ.get('DOCS_DIR', './docs')
 
           client = ChatwootClient(
-              os.environ['CHATWOOTBASEURL'],
-              os.environ['CHATWOOTAPITOKEN'],
-              os.environ.get('CHATWOOTACCOUNTID', '1'),
+              os.environ['CHATWOOT_BASE_URL'],
+              os.environ['CHATWOOT_API_TOKEN'],
+              os.environ.get('CHATWOOT_ACCOUNT_ID', '1'),
           )
 
           results = sync(
               client,
-              os.environ['CHATWOOTPORTALSLUG'],
+              os.environ['CHATWOOT_PORTAL_SLUG'],
               docs_dir,
               chunk_size=10,
               dryrun=dryrun,
