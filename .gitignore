@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+.env
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Sync manifest (tracked per-docs-repo, not here)
+.chatwoot-sync.json
+
+# IDE
+.vscode/
+.idea/
+
