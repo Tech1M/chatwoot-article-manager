@@ -299,18 +299,20 @@ function GitPanel({ addToast }: { addToast: (msg: string, type: 'success' | 'err
 
   if (!status) return null
 
+  const changes = status.changes ?? []
+
   return (
     <div className="git-panel">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <span style={{ fontSize: 11, fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-dim)' }}>
-          Git {status.clean ? '✓ clean' : `(${status.changes.length} changes)`}
+          Git {!status.ok ? '⚠ no repo' : status.clean ? '✓ clean' : `(${changes.length} changes)`}
         </span>
         <button className="btn btn-ghost" style={{ padding: '2px 8px', fontSize: 11 }} onClick={refresh}>↻</button>
       </div>
-      {status.changes.length > 0 && (
+      {changes.length > 0 && (
         <>
           <div className="git-changes">
-            {status.changes.map((c, i) => (
+            {changes.map((c, i) => (
               <div key={i} className="git-change">
                 <span className="git-status-code">{c.status}</span>
                 <span>{c.file}</span>
