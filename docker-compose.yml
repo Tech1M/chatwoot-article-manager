@@ -1,0 +1,19 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      - CHATWOOT_BASE_URL=${CHATWOOT_BASE_URL}
+      - CHATWOOT_API_TOKEN=${CHATWOOT_API_TOKEN}
+      - CHATWOOT_ACCOUNT_ID=${CHATWOOT_ACCOUNT_ID:-1}
+      - CHATWOOT_PORTAL_SLUG=${CHATWOOT_PORTAL_SLUG}
+      - DOCS_DIR=/data/docs
+      - PORT=8000
+    volumes:
+      - docs_data:/data/docs
+
+volumes:
+  docs_data:
+
