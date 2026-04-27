@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+.env
+
+# Frontend build artifacts (rebuilt in Docker)
+frontend/node_modules/
+frontend/dist/
+
+# Sync manifest (lives in the docs volume, not the app repo)
+.chatwoot-sync.json
+
+# IDE
+.vscode/
+.idea/
+
+# Docker
+.dockerignore
+
