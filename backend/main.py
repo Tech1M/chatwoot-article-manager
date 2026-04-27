@@ -11,6 +11,7 @@ from typing import Optional
 import yaml
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -56,6 +57,19 @@ def _run_git(args: list[str], cwd: Path) -> tuple[int, str]:
         return r.returncode, (r.stdout + r.stderr).strip()
     except Exception as e:
         return 1, str(e)
+
+
+# ── Health ───────────────────────────────────────────────────────────────
+
+@app.get("/health")
+def health():
+    frontend_dist = Path(__file__).parent.parent / "frontend" / "dist"
+    return {
+        "status": "ok",
+        "frontend_exists": frontend_dist.exists(),
+        "frontend_path": str(frontend_dist),
+        "frontend_files": [f.name for f in frontend_dist.iterdir()] if frontend_dist.exists() else [],
+    }
 
 
 # ── File tree ────────────────────────────────────────────────────────────
@@ -253,4 +267,14 @@ def list_categories():
 frontend_dist = Path(__file__).parent.parent / "frontend" / "dist"
 if frontend_dist.exists():
     app.mount("/", StaticFiles(directory=str(frontend_dist), html=True), name="frontend")
+else:
+    @app.get("/")
+    def fallback_root():
+        return HTMLResponse(
+            "<h2>Chatwoot Article Manager</h2>"
+            "<p>Frontend not built. Run <code>cd frontend && node build.cjs</code></p>"
+            f"<p>Looked in: <code>{frontend_dist}</code></p>"
+            "<p><a href='/health'>Health check</a> | <a href='/api/files'>API: files</a></p>",
+            status_code=200,
+        )
 

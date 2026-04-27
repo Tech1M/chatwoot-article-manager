@@ -3,9 +3,10 @@ FROM node:20-alpine AS frontend
 WORKDIR /app/frontend
 COPY frontend/package.json frontend/pnpm-lock.yaml ./
 RUN corepack enable && corepack prepare pnpm@latest --activate
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile && pnpm approve-builds --all
 COPY frontend/ ./
 RUN node build.cjs
+RUN ls -la dist/
 
 # -- Runtime --
 FROM python:3.11-slim
@@ -31,4 +32,5 @@ ENV PORT=8000
 EXPOSE 8000
 
 CMD ["python3", "run.py"]
+
 
